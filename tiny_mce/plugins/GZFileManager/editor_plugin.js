@@ -27,7 +27,7 @@
 				ed.windowManager.open({
 					file : url + '/index.php',
 					width : 650,
-					height : 520,
+					height : 450,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL

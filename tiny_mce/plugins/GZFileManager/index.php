@@ -105,6 +105,10 @@ img {
     height:45px;
 }
 
+.container {
+    width:95%;
+}
+
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -123,9 +127,9 @@ var info = '$info';
         </caption>
         <thead>
             <tr>
-                <th class="span-8">文件名</th>
-                <th class="span-2">文件大小</th>
-                <th class="span-3 last">最后更新时间</th>
+                <th>文件名</th>
+                <th width="20%">文件大小</th>
+                <th width="20%">最后更新时间</th>
             </tr>
         </thead>
         <tfoot>
