@@ -1,43 +1,108 @@
 
-function real_time(time) {
-    var m = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-        w = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
-        d = new Date();
 
-    time = parseInt(time);
+var realTime = {
+  _lang : {},
+  lang : 'auto',
+  fixTime : null
+};
 
-    var delta = parseInt(d.getTime() / 1000) - time;
+realTime._lang['en'] = {
+  month : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Aguest', 'September', 'October', 'November','December'],
+  week : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  secend : '%1 second ago',
+  secends : '%1 seconds ago',
+  minute : '%1 minute ago',
+  minutes : '%1 minutes ago',
+  hour : '%1 hour ago',
+  hours : '%1 hours ago',
+  yesterday : 'yesterday at %1',
+  lastweek : '%1 at %2',
+  longago : '%1 %2, %3 at %4'
+};
 
-    if (delta < 0) {
-        delta = 0;
+realTime._lang['zh-cn'] = {
+  month : ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+  week : ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+  secend : '%1 秒前',
+  secends : '%1 秒前',
+  minute : '%1 分钟前',
+  minutes : '%1 分钟前',
+  hour : '%1 小时前',
+  hours : '%1 小时前',
+  yesterday : '昨日%1',
+  lastweek : '%1%2',
+  longago : '%1%2日, %3 %4'
+};
+
+realTime.outPut = function(time) {
+
+  function sprintf() {
+    var args = arguments;
+    if (args.length == 1) {
+      return args[0];
     }
+    var pattern = new RegExp("%([1-"+args.length+"])", "g");
+    return args[0].replace(pattern, function(match, index) {
+      return args[index];
+    });
+  }
 
-    if (delta < 3600 * 24) {
-        if (delta < 60) {
-            delta += '秒';
-        } else if (delta < 3600) {
-            delta = parseInt(delta / 60);
-            delta += '分钟';
-        } else {
-            delta = parseInt(delta / 3600);
-            delta += '小时';
-        }
-        delta += '前';
-    } else {
-        d.setTime(time * 1000);
-        var t = [parseInt(d.getHours()), parseInt(d.getMinutes())];
-        var alpha = t[0] > 12 ? (t[0] - 12) + ':' + t[1] + ' pm' : t[0] + ':' + t[1] + ' am';
-        if (delta < 3600 * 48) {
-            delta = '昨日' + alpha;
-        } else if (delta < 3600 * 24 * 7) {
-            delta = w[d.getDay()] + alpha;
-        } else {
-            delta = m[d.getMonth()] + d.getDate() + '日, ' + d.getFullYear() + ' ' + alpha;
-        }
+  if (this.lang == 'auto') {
+    this.lang = navigator.browserLanguage || navigator.language;
+    this.lang = this.lang.toLowerCase();
+  }
+
+  var lang = this._lang[this.lang] || this._lang['en'];
+
+  var m = lang.month,
+      w = lang.week,
+      d = new Date();
+
+  time = parseInt(time);
+
+  var delta = (this.fixTime || parseInt(d.getTime() / 1000)) - time;
+  // if the time is below 0 then set 0
+  delta = delta > 0 ? delta : 0;
+  
+  if (delta < 3600 * 24) {
+    if (delta < 60) {// less then 1 minute
+      if (delta > 1) {
+        delta = sprintf(lang.secends, delta);
+      } else {
+        delta = sprintf(lang.secend, delta);
+      }
+    } else if (delta < 3600) {// less then 1 hour
+      delta = parseInt(delta / 60);
+      if (delta > 1) {
+        delta = sprintf(lang.minutes, delta);
+      } else {
+        delta = sprintf(lang.minute, delta);
+      }
+    } else {// less then 1 day
+      delta = parseInt(delta / 3600);
+      if (delta > 1) {
+        delta = sprintf(lang.hours, delta);
+      } else {
+        delta = sprintf(lang.hour, delta);
+      }
     }
+  } else {
+    d.setTime(time * 1000);
+    var t = [parseInt(d.getHours()), parseInt(d.getMinutes())];
+    var alpha = t[0] > 12 ? (t[0] - 12)+':'+t[1]+' pm' : t[0]+':'+t[1]+' am';
+    if (delta < 3600 * 48) {// less then 2 days
+      delta = sprintf(lang.yesterday, alpha);
+    } else if (delta < 3600 * 24 * 7) {// less then 1 week
+      delta = sprintf(lang.lastweek, w[d.getDay()], alpha);
+    } else {// more then 1 week
+      delta = sprintf(lang.longago, m[d.getMonth()], d.getDate(), d.getFullYear(), alpha);
+    }
+  }
 
-    return delta;
-}
+  return delta;
+};
+
+realTime.lang = tinyMCE.activeEditor.settings.language;
 
 function insert(text) {
   var ext = text.split('.').pop().toLowerCase();
@@ -52,17 +117,19 @@ function insert(text) {
 	tinyMCEPopup.close();
 }
 
-function size_format(value, dec) {
-    var value = parseInt(value);
-    var dec = dec || 2;
-    var prefix_arr = [" B", " K", " M", " G", " T"];
+function sizeFormat(value, option) {
+  var value = parseInt(value);
+  var option = option || {};
+  option.dec = option.dec || 2;
+  option.prefixArr = option.prefixArr || [" B", " KB", " MB", " GB", " TB"];
+  option.convertUnits = option.convertUnits || 1024;
 
-    while (value > 1024) {
-        value /= 1024;
-        prefix_arr.shift();
-    }
+  while (value > option.convertUnits) {
+    value /= option.convertUnits;
+    option.prefixArr.shift();
+  }
 
-    return (Math.round(value * Math.pow(10, dec)) / Math.pow(10, dec)) + prefix_arr.shift();
+  return (Math.round(value * Math.pow(10, option.dec)) / Math.pow(10, option.dec)) + option.prefixArr.shift();
 }
 
 $(function(){
@@ -132,12 +199,12 @@ if (info != '') {
 
 $('.realtime').each(function(){
     var ctime = $(this).html();
-    $(this).html(real_time(ctime));
+    $(this).html(realTime.outPut(ctime));
 });
 
 $('.size_format').each(function(){
     var size = $(this).html();
-    $(this).html(size_format(size));
+    $(this).html(sizeFormat(size));
 });
 
 $('.folder_info').hover(function(){

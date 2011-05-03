@@ -39,7 +39,7 @@
 			ed.addButton('GZFileManager', {
 				title : 'GZFileManager.desc',
 				cmd : 'GZFileManager',
-				image : url + '/img/user-home.gif'
+				image : url + '/library/famfamfam/page_attachment.gif'
 			});
 
 			// Add a node change handler, selects the button in the UI when a image is selected
