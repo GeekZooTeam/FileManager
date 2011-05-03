@@ -1,5 +1,5 @@
 <?php
-
+//echo json_encode('确定删除文件 : ');exit;
 define('ROOT_PATH', dirname(__FILE__));
 define('ROOT', ROOT_PATH.'/data');
 
@@ -74,8 +74,8 @@ print <<<EOT
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>{#GZFileManager_dlg.title} - {$d}</title>
     <meta name="generator" content="TextMate http://macromates.com/">
-    <meta name="author" content="宣言">
-    <!-- Date: 2009-08-01 -->
+    <meta name="author" content="Geek-Zoo">
+
     <link rel="stylesheet" href="library/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="library/blueprint/print.css" type="text/css" media="print">
     <!--[if lt IE 8]><link rel="stylesheet" href="library/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
@@ -107,7 +107,6 @@ img {
 
 <script type="text/javascript" charset="utf-8">
 tinyMCEPopup.requireLangPack();
-
 private_key = '$private_key';
 var d = '$d';
 var info = '$info';

@@ -144,8 +144,8 @@ $('.folder_info').hover(function(){
     var dir = $(this).find('a').html();
     var del = $('<span style="float:right;padding-top:2px;"><img src="library/famfamfam/action_stop.gif" /></span>');
     del.click(function() {
-        if (confirm('确定删除目录 : '+dir+' ?')) {
-            if (confirm('请再次确认操作 , 此操作会删除目录下的所有文件')) {
+        if (confirm(tinyMCEPopup.editor.getLang('GZFileManager.folder_delete')+dir+' ?')) {
+            if (confirm(tinyMCEPopup.editor.getLang('GZFileManager.confirm_again'))) {
                 del.unbind('click');
                 location.href = '?d='+d+'/'+dir+'&a=delete&private_key='+private_key;
             }
@@ -182,7 +182,7 @@ $('.file_info').hover(function(){
     $(this).append('<span style="padding-left:5px;">'+htm+'</span>');
     var del = $('<span style="float:right;padding-top:2px;"><img src="library/famfamfam/action_stop.gif" /></span>');
     del.click(function() {
-        if (confirm('确定删除文件 : '+filename+' ?')) {
+        if (confirm(tinyMCEPopup.editor.getLang('GZFileManager.file_delete')+filename+' ?')) {
             del.unbind('click');
             location.href = '?d='+d+'/'+filename+'&a=delete&private_key='+private_key;
         }
