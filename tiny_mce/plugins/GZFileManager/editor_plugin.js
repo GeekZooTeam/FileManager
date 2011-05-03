@@ -23,11 +23,11 @@
 		 */
 		init : function(ed, url) {
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
-			ed.addCommand('mceExample', function() {
+			ed.addCommand('GZFileManager', function() {
 				ed.windowManager.open({
 					file : url + '/index.php',
-					width : 550 + parseInt(ed.getLang('example.delta_width', 0)),
-					height : 520 + parseInt(ed.getLang('example.delta_height', 0)),
+					width : 550,
+					height : 520,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
@@ -38,7 +38,7 @@
 			// Register example button
 			ed.addButton('GZFileManager', {
 				title : 'GZFileManager.desc',
-				cmd : 'mceExample',
+				cmd : 'GZFileManager',
 				image : url + '/img/user-home.gif'
 			});
 
