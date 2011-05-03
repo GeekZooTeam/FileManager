@@ -1,4 +1,6 @@
 
+tinyMCEPopup.requireLangPack();
+
 
 var realTime = {
   _lang : {},
@@ -133,6 +135,9 @@ function sizeFormat(value, option) {
 }
 
 $(function(){
+  
+  $('.container').width($(document).width()-30);
+
 // new_folder
 $('#new_folder').click(function(){
     $('.bag').remove();

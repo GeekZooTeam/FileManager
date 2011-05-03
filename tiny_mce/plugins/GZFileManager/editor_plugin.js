@@ -26,7 +26,7 @@
 			ed.addCommand('GZFileManager', function() {
 				ed.windowManager.open({
 					file : url + '/index.php',
-					width : 550,
+					width : 650,
 					height : 520,
 					inline : 1
 				}, {

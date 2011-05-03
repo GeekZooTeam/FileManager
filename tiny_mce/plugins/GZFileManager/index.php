@@ -81,6 +81,7 @@ print <<<EOT
     <!--[if lt IE 8]><link rel="stylesheet" href="library/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
     <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+    <script type="text/javascript" src="library/script.js"></script>
 
 <style type="text/css" media="screen">
 
@@ -103,6 +104,7 @@ img {
 .bag {
     height:45px;
 }
+
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -110,7 +112,6 @@ tinyMCEPopup.requireLangPack();
 private_key = '$private_key';
 var d = '$d';
 var info = '$info';
-jQuery.getScript('library/script.js');
 </script>
 </head>
 <body>
